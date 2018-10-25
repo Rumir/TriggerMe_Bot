@@ -260,4 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 
-TriggerMe_Bot/Properties/Resources.resx
+TriggerMe_Bot/Properties/Resources.*
