@@ -97,7 +97,7 @@ namespace TriggerMe_Bot.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die NTA1MDg1MDM3MTM4NTQyNjEy.DrPFGw.X-g9Q1UtGKtApkB6kpU4CmfiWW0 ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die  ähnelt.
         /// </summary>
         internal static string token {
             get {
