@@ -23,8 +23,6 @@ namespace TriggerMe_Bot
 
         public async Task MainAsync()
         {
-            
-
             _client = new DiscordSocketClient();
 
             _client.Log += LogAsync;
@@ -82,7 +80,7 @@ namespace TriggerMe_Bot
                         "• Trigger Remove <Word or Words>! - Removes a trigger\n" + //TODO
                         "• Trigger AddMod <Discord Tag>! - Adds a moderator **(OWNER ONLY)**\n" + //TODO
                         "• Trigger ListMod! - Lists all moderators **(OWNER ONLY)**\n" + //TODO
-                        "• Trigger RemoveMod <Discord Tag>! - Removes a moderator **(OWNER ONLY)**"); //TODO
+                        "• Trigger RemoveMod <id>! - Removes a moderator **(OWNER ONLY)**"); //TODO
                     break;
                 case "trigger list!":
                 case "trigger list2!":

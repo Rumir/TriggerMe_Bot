@@ -61,16 +61,43 @@ namespace TriggerMe_Bot.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die 67628096 ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die  ähnelt.
         /// </summary>
-        internal static string permissions_int {
+        internal static string sql_db {
             get {
-                return ResourceManager.GetString("permissions_int", resourceCulture);
+                return ResourceManager.GetString("sql_db", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die NTA1MDg1MDM3MTM4NTQyNjEy.DrOeJg.rCqa1BUFPXcg8M8o-iH4U19yi_E ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die  ähnelt.
+        /// </summary>
+        internal static string sql_name {
+            get {
+                return ResourceManager.GetString("sql_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die  ähnelt.
+        /// </summary>
+        internal static string sql_pw {
+            get {
+                return ResourceManager.GetString("sql_pw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die  ähnelt.
+        /// </summary>
+        internal static string sql_url {
+            get {
+                return ResourceManager.GetString("sql_url", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die NTA1MDg1MDM3MTM4NTQyNjEy.DrPFGw.X-g9Q1UtGKtApkB6kpU4CmfiWW0 ähnelt.
         /// </summary>
         internal static string token {
             get {

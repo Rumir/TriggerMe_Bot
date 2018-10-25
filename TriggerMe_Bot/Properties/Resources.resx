@@ -117,10 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="permissions_int" xml:space="preserve">
-    <value>67628096</value>
+  <data name="sql_db" xml:space="preserve">
+    <value />
+  </data>
+  <data name="sql_name" xml:space="preserve">
+    <value />
+  </data>
+  <data name="sql_pw" xml:space="preserve">
+    <value />
+  </data>
+  <data name="sql_url" xml:space="preserve">
+    <value />
   </data>
   <data name="token" xml:space="preserve">
-    <value>NTA1MDg1MDM3MTM4NTQyNjEy.DrOeJg.rCqa1BUFPXcg8M8o-iH4U19yi_E</value>
+    <value>NTA1MDg1MDM3MTM4NTQyNjEy.DrPFGw.X-g9Q1UtGKtApkB6kpU4CmfiWW0</value>
   </data>
 </root>
