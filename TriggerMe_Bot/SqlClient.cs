@@ -16,8 +16,7 @@ namespace TriggerMe_Bot
             string connectionString = $"Server={Properties.Resources.sql_url};" +
                 $"Database={Properties.Resources.sql_db};" +
                 $"Uid={Properties.Resources.sql_name};" +
-                $"Pwd={Properties.Resources.sql_pw};" +
-                $"SslMode=Preferred;";
+                $"Pwd={Properties.Resources.sql_pw};";
 
             _client = new MySqlConnection(connectionString);
 
