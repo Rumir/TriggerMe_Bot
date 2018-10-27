@@ -58,7 +58,7 @@ namespace TriggerMe_Bot
 
                 await CommandTrigger(message);
             }
-            catch
+            catch (Exception e)
             {
                 await message.Channel.SendMessageAsync("Something went wrong horribly. Please contact a developer: https://github.com/Rumir/TriggerMe_Bot/issues");
             }
@@ -68,36 +68,37 @@ namespace TriggerMe_Bot
         private async Task CommandTrigger(SocketMessage message)
         {
             SocketGuildChannel chnl = message.Channel as SocketGuildChannel;
+            string parameters;
             switch (message.Content.ToLower())
             {
-                case "trigger me!":
+                case "trigger me":
                     await message.Channel.SendMessageAsync("Hello, I am Trigger Me BOT, your friendly helper to not say certain words.\nIf you need help" +
                         ", you can just write \"Trigger Help!\" to trigger me and I will write a helpful help message in this channel");
                     break;
 
-                case "trigger help!":
+                case "trigger help":
                     await message.Channel.SendMessageAsync("***Commands***\n" +
-                        "• Trigger Me! - Shows a helpful introduction to me\n" +
-                        "• Trigger Help! - Shows this helpful help message\n" +
-                        "• Trigger List! - Messages you privately the full trigger list. You need to allow me to message you or I can't help you with this\n" + 
-                        "• Trigger List2! - Shows the full trigger list in this channel\n" + 
+                        "• Trigger Me - Shows a helpful introduction to me\n" +
+                        "• Trigger Help - Shows this helpful help message\n" +
+                        "• Trigger List - Messages you privately the full trigger list. You need to allow me to message you or I can't help you with this\n" + 
+                        "• Trigger List2 - Shows the full trigger list in this channel\n" + 
                         "***Admin Commands (need to be at least moderator)***\n\n" +
-                        "• Trigger Add <Word or Words> <Mode>! - Adds one word or a sequence of words to the Trigger List. The Mode parameter accepts \"normal\"" + //TODO
+                        "• Trigger Add <Word or Words> <Mode>! - Adds one word or a sequence of words to the Trigger List. The Mode parameter accepts \"normal\"" + 
                         ", \"characters\" where...\n" +
                         "•• normal - no special characters for letters\n" + //TODO
-                        "•• characters - included special characters for letters like \"Tr!gg3r\" (1337 5p34k)\n" + //TODO
-                        "• Trigger Info <Word or Words>! - Shows infos about the set trigger\n" + //TODO
-                        "• Trigger Remove <Word or Words>! - Removes a trigger\n" + //TODO
-                        "• Trigger AddMod <Discord Tag>! - Adds a moderator **(OWNER ONLY)**\n" + //TODO
-                        "• Trigger ListMod! - Lists all moderators **(OWNER ONLY)**\n" + //TODO
-                        "• Trigger RemoveMod <id>! - Removes a moderator **(OWNER ONLY)**\n" + //TODO
-                        "• Trigger Permissions! - Shows all the needed permissions in a pretty list\n\n" +
+                        "•• leet - included special characters for letters like \"Tr!gg3r\" (1337 5p34k)\n" + //TODO
+                        "• Trigger Info <Word or Words> - Shows infos about the set trigger\n" + //TODO
+                        "• Trigger Remove <Word or Words> - Removes a trigger\n" + //TODO
+                        "• Trigger AddMod <Discord Tag> - Adds a moderator **(OWNER ONLY)**\n" + //TODO
+                        "• Trigger ListMod - Lists all moderators **(OWNER ONLY)**\n" + //TODO
+                        "• Trigger RemoveMod <id> - Removes a moderator **(OWNER ONLY)**\n" + //TODO
+                        "• Trigger Permissions - Shows all the needed permissions in a pretty list\n\n" +
                         "***Notice***\n" +
                         "• All commands are case-insensitive. So you can write everything capitalized, or the opposite, or just a mix of both.\n" +
                         "• I am still under construction. Please be patient with me when I crash. My programmer will fix the problems as fast as possible."); 
                     break;
 
-                case "trigger list2!":
+                case "trigger list2":
                     ArrayList list = sqlClient.PutCommand($"SELECT trigger_word FROM triggers WHERE server_id = {chnl.Guild.Id};");
                     if (list.Count == 0)
                         await message.Channel.SendMessageAsync("There are no triggers right now..");
@@ -110,7 +111,7 @@ namespace TriggerMe_Bot
                             string localstring = item;
                             localstring = localstring.Remove(localstring.Length - 1);
                             localstring = localstring.Insert(localstring.Length, ",\n");
-                            output += localstring;
+                            output += "• " + localstring;
                         }
                         output = output.Remove(output.Length - 2);
 
@@ -121,7 +122,7 @@ namespace TriggerMe_Bot
                     }
                     break;
 
-                case "trigger list!":
+                case "trigger list":
                     ArrayList listt = sqlClient.PutCommand($"SELECT trigger_word FROM triggers WHERE server_id = {chnl.Guild.Id};");
                     if (listt.Count == 0)
                         await message.Channel.SendMessageAsync("There are no triggers right now..");
@@ -134,7 +135,7 @@ namespace TriggerMe_Bot
                             string localstring = item;
                             localstring = localstring.Remove(localstring.Length - 1);
                             localstring = localstring.Insert(localstring.Length, ",\n");
-                            output += localstring;
+                            output += "• " + localstring;
                         }
                         output = output.Remove(output.Length - 2);
 
@@ -145,7 +146,7 @@ namespace TriggerMe_Bot
                     }
                     break;
 
-                case "trigger permissions!":
+                case "trigger permissions":
                     await message.Channel.SendMessageAsync("***Permissions Needed***\n" +
                         "• View Channels\n" +
                         "• Send Messages\n" +
@@ -157,18 +158,120 @@ namespace TriggerMe_Bot
                         "• Add Reactions\n");
                     break;
             }
-            if (1 == 0)
-                ;
-            else if (message.Content.ToLower().Contains("trigger add")
-                 || message.Content.ToLower().Contains("trigger info")
-                 || message.Content.ToLower().Contains("trigger remove")
-                 || message.Content.ToLower().Contains("trigger addmod")
-                 || message.Content.ToLower().Contains("trigger listmod")
-                 || message.Content.ToLower().Contains("trigger removemod"))
+
+            if (message.Content.ToLower().StartsWith("trigger add "))
             {
+                if (!isMod(chnl, message))
+                {
+                    await message.Channel.SendMessageAsync("Sorry, but you are not a moderator");
+                    return;
+                }
+                parameters = message.Content.ToLower().Remove(0, 12); //remove "trigger add"
+                while (parameters[0] == ' ')
+                    parameters = message.Content.ToLower().Remove(0, 1); //remove unneccessary spaces
+
+                string trigger_word = "";
+                foreach (string item in parameters.Split(' '))
+                    if (item.ToLower() != "normal" && item.ToLower() != "leet")
+                        trigger_word += item.ToLower() + " ";
+                trigger_word = trigger_word.Remove(trigger_word.Length - 1);
+
+                ArrayList sqlresult = sqlClient.PutCommand($"SELECT trigger_word FROM triggers WHERE server_id = {chnl.Guild.Id} AND trigger_word = '{trigger_word}';");
+                if (sqlresult.Count != 0)
+                {
+                    await message.Channel.SendMessageAsync("Trigger already existing");
+                    return;
+                }
+                else
+                {
+                    string setting = parameters.Split(' ')[parameters.Split(' ').Length - 1].ToLower();
+                    if (setting != "normal" && setting != "leet")
+                    {
+                        await message.Channel.SendMessageAsync("No setting was given. Using \"normal\" as setting");
+                        setting = "normal";
+                    }
+                    else if (setting == "leet")
+                    {
+                        await message.Channel.SendMessageAsync("Setting \"leet\" not implemented yet. Using \"normal\"!"); //I'm lazy, okay?
+                        setting = "normal";
+                    }
+
+                    sqlClient.PutCommand($"INSERT INTO triggers (server_id, trigger_word, trigger_setting, added_by) VALUES (" +
+                        $"{chnl.Guild.Id}," +
+                        $"'{trigger_word}'," +
+                        $"'{setting}'," +
+                        $"{message.Author.Id});");
+
+                    await message.Channel.SendMessageAsync("Trigger added!");
+                }
+
+            }
+
+            else if (message.Content.ToLower().StartsWith("trigger info "))
+            {
+                parameters = message.Content.ToLower().Remove(0, 13);
+                while (parameters[0] == ' ')
+                    parameters = message.Content.ToLower().Remove(0, 1);
                 await message.Channel.SendMessageAsync("Not implemented yet");
             }
+
+            else if (message.Content.ToLower().StartsWith("trigger remove "))
+            {
+                parameters = message.Content.ToLower().Remove(0, 15);
+                while (parameters[0] == ' ')
+                    parameters = message.Content.ToLower().Remove(0, 1);
+                await message.Channel.SendMessageAsync("Not implemented yet");
+            }
+
+            else if (message.Content.ToLower().StartsWith("trigger addmod "))
+            {
+                parameters = message.Content.ToLower().Remove(0, 15);
+                while (parameters[0] == ' ')
+                    parameters = message.Content.ToLower().Remove(0, 1);
+                if (parameters.Length == 0)
+                {
+                    await message.Channel.SendMessageAsync("Usage: Trigger AddMod <Discord Tag>!");
+                    return;
+                }
+
+                await message.Channel.SendMessageAsync("Not implemented yet");
+            }
+
+            else if (message.Content.ToLower().StartsWith("trigger listmod "))
+            {
+                parameters = message.Content.ToLower().Remove(0, 16);
+                while (parameters[0] == ' ')
+                    parameters = message.Content.ToLower().Remove(0, 1);
+                await message.Channel.SendMessageAsync("Not implemented yet");
+            }
+
+            else if (message.Content.ToLower().StartsWith("trigger removemod "))
+            {
+                parameters = message.Content.ToLower().Remove(0, 18);
+                while (parameters[0] == ' ')
+                    parameters = message.Content.ToLower().Remove(0, 1);
+                await message.Channel.SendMessageAsync("Not implemented yet");
+            }
+
+            /////////////////////
+
+            else if (message.Content.ToLower().StartsWith("trigger add")
+                || message.Content.ToLower().StartsWith("trigger info")
+                || message.Content.ToLower().StartsWith("trigger remove")
+                || message.Content.ToLower().StartsWith("trigger addmod")
+                || message.Content.ToLower().StartsWith("trigger listmod")
+                || message.Content.ToLower().StartsWith("trigger removemod"))
+                ;
+
             
+        }
+
+        private bool isMod(SocketGuildChannel chnl, SocketMessage message)
+        {
+            ArrayList result = sqlClient.PutCommand($"SELECT client_id FROM moderators WHERE server_id = {chnl.Guild.Id} AND client_id = '{message.Author.Id}';");
+            if (result.Count == 0)
+                return false;
+            return true;
         }
     }
 }
