@@ -29,6 +29,9 @@ namespace TriggerMe_Bot
             command.CommandText = pCommand;
             MySqlDataReader reader;
 
+            if (_client.State == System.Data.ConnectionState.Open)
+                _client.Close();
+            
             _client.Open();
             reader = command.ExecuteReader();
 
@@ -39,7 +42,6 @@ namespace TriggerMe_Bot
                     row += reader.GetValue(i).ToString() + ";";
                 output.Add(row);
             }
-
             _client.Close();
 
             return output;
