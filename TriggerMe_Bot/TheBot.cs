@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -105,7 +103,7 @@ namespace TriggerMe_Bot
                  **/
                 case "trigger me":
                     await message.Channel.SendMessageAsync("Hello, I am Trigger Me BOT, your friendly helper to not say certain words.\nIf you need help" +
-                        ", you can just write \"Trigger Help!\" to trigger me and I will write a helpful help message in this channel");
+                        ", you can just write \"Trigger Help\" to trigger me and I will write a helpful help message in this channel");
                     break;
                 /**
                  * 
